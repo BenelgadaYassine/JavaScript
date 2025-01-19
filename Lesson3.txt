@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Photo Gallery</title>
+    <style>
+        /* CSS for styling */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+        main {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 20px;
+        }
+        figure {
+            margin: 10px;
+            text-align: center;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        figcaption {
+            margin-top: 10px;
+            font-size: 1.2em;
+        }
+        #image {
+            width: 100%;
+            text-align: center;
+            margin: 20px 0;
+            font-size: 1.5em;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <!-- HTML Structure -->
+    <header>
+        <h1>My Photo Gallery</h1>
+    </header>
+    <main>
+        <div id="image">Hover over an image below to display here.</div>
+        <figure>
+            <img src="https://via.placeholder.com/300x200" alt="Placeholder Image 1" tabindex="0">
+            <figcaption>Placeholder Image 1</figcaption>
+        </figure>
+        <figure>
+            <img src="https://via.placeholder.com/300x200" alt="Placeholder Image 2" tabindex="0">
+            <figcaption>Placeholder Image 2</figcaption>
+        </figure>
+        <figure>
+            <img src="https://via.placeholder.com/300x200" alt="Placeholder Image 3" tabindex="0">
+            <figcaption>Placeholder Image 3</figcaption>
+        </figure>
+        <!-- Add more figures as needed -->
+    </main>
+
+    <script>
+        // JavaScript for interactivity and accessibility
+
+        // Automatically add tabindex to figures
+        document.querySelectorAll('figure').forEach((figure, index) => {
+            figure.setAttribute('tabindex', index + 1);
+        });
+
+        // Function to handle mouseover/focus event
+        function upDate(previewPic) {
+            const imageDiv = document.getElementById('image');
+            imageDiv.innerHTML = previewPic.alt;
+            imageDiv.style.backgroundImage = `url(${previewPic.src})`;
+        }
+
+        // Function to handle mouseout/blur event
+        function undo() {
+            const imageDiv = document.getElementById('image');
+            imageDiv.innerHTML = "Hover over an image below to display here.";
+            imageDiv.style.backgroundImage = "url('')";
+        }
+
+        // Add event listeners to images
+        document.querySelectorAll('img').forEach(img => {
+            img.addEventListener('mouseover', () => upDate(img));
+            img.addEventListener('mouseout', undo);
+            img.addEventListener('focus', () => upDate(img));
+            img.addEventListener('blur', undo);
+        });
+
+        // Lightbox functionality
+        document.querySelectorAll('img').forEach(img => {
+            img.addEventListener('click', () => {
+                const lightbox = document.createElement('div');
+                lightbox.style.position = 'fixed';
+                lightbox.style.top = '0';
+                lightbox.style.left = '0';
+                lightbox.style.width = '100%';
+                lightbox.style.height = '100%';
+                lightbox.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+                lightbox.style.display = 'flex';
+                lightbox.style.justifyContent = 'center';
+                lightbox.style.alignItems = 'center';
+                lightbox.style.zIndex = '1000';
+
+                const lightboxImg = document.createElement('img');
+                lightboxImg.src = img.src;
+                lightboxImg.style.maxWidth = '90%';
+                lightboxImg.style.maxHeight = '90%';
+
+                lightbox.appendChild(lightboxImg);
+                document.body.appendChild(lightbox);
+
+                lightbox.addEventListener('click', () => {
+                    document.body.removeChild(lightbox);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
